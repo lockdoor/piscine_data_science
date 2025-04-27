@@ -1,0 +1,54 @@
+services:
+  postgres:
+    image: postgres:16.8-alpine3.20
+    container_name: postgres
+    hostname: postgres
+    volumes:
+      - ./myvalume:/myvalume
+    environment:
+      POSTGRES_USER: pnamnil
+      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_pwd
+      POSTGRES_DB: piscineds
+    secrets:
+      - postgres_pwd
+    restart: always
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    hostname: pgadmin
+    volumes:
+      - ./pgadmin:/pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: pnamnil@42bangkok.com
+      PGADMIN_DEFAULT_PASSWORD_FILE: /run/secrets/pgadmin_pwd
+      PGADMIN_SERVER_JSON_FILE: /pgadmin/server.json
+    secrets: 
+      - pgadmin_pwd
+    restart: always
+    ports:
+      - "8000:80"
+
+  jupyter:
+    build:
+      context: ./jupyter
+      dockerfile: Dockerfile
+    container_name: jupyter
+    hostname: jupyter
+    volumes:
+      - ./myvalume:/myvalume
+    environment:
+      - JUPYTER_TOKEN=/run/secrets/jupyter_token
+      - JUPYTER_PORT=8888
+    secrets:
+      - jupyter_token
+    ports:
+      - "8888:8888"
+
+secrets:
+  postgres_pwd:
+    file: ./secrets/postgres_pwd.txt
+  pgadmin_pwd:
+    file: ./secrets/pgadmin_pwd.txt
+  jupyter_token:
+    file: ./secrets/jupyter_token.txt

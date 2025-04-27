@@ -1,0 +1,12 @@
+{
+    "Servers": {
+        "1": {
+            "Name": "PostgreSQL Piscine Data Science",
+            "Group": "Servers",
+            "Host": "postgres",
+            "Port": 5432,
+            "MaintenanceDB": "piscineds",
+            "Username": "pnamnil"
+        }
+    }
+}
