@@ -5,12 +5,10 @@ services:
     hostname: postgres
     volumes:
       - ./myvalume:/myvalume
-    environment:
-      POSTGRES_USER: pnamnil
-      POSTGRES_PASSWORD_FILE: /run/secrets/postgres_pwd
-      POSTGRES_DB: piscineds
     secrets:
       - postgres_pwd
+    env_file:
+      - .env
     restart: always
 
   pgadmin:
@@ -19,12 +17,10 @@ services:
     hostname: pgadmin
     volumes:
       - ./pgadmin:/pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: pnamnil@42bangkok.com
-      PGADMIN_DEFAULT_PASSWORD_FILE: /run/secrets/pgadmin_pwd
-      PGADMIN_SERVER_JSON_FILE: /pgadmin/server.json
     secrets: 
       - pgadmin_pwd
+    env_file:
+      - .env
     restart: always
     ports:
       - "8000:80"
@@ -37,13 +33,13 @@ services:
     hostname: jupyter
     volumes:
       - ./myvalume:/myvalume
-    environment:
-      - JUPYTER_TOKEN=/run/secrets/jupyter_token
-      - JUPYTER_PORT=8888
     secrets:
       - jupyter_token
+      - postgres_pwd
+    env_file:
+      - .env
     ports:
-      - "8888:8888"
+      - "8888:${JUPYTER_PORT}"
 
 secrets:
   postgres_pwd:

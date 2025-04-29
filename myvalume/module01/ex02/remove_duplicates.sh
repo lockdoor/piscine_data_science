@@ -156,7 +156,7 @@ FROM filtered;"
 
 
 # DROP TABLE customers;
-# $PSQL "DROP TABLE IF EXISTS customers;"
+$PSQL "DROP TABLE IF EXISTS customers;"
 
 # RENAME TABLE customers_new TO customers;"
-# $PSQL "ALTER TABLE customers_new RENAME TO customers;"
+$PSQL "ALTER TABLE customers_new RENAME TO customers;"
