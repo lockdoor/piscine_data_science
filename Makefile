@@ -1,12 +1,15 @@
 all:
-	docker-compose up -d
+	docker compose up -d
 
 up:
-	docker-compose up --build -d
+	docker compose up --build -d
 # docker-compose logs --follow jupyter
 
 down:
-	docker-compose down
+	docker compose down
+
+exec:
+	docker exec -it postgres bash
 
 clean:
 	docker stop $(docker ps -qa);
@@ -15,4 +18,4 @@ clean:
 	docker volume rm $(docker volume ls -q);
 	docker network rm $(docker network ls -q) 2>/dev/null;
 
-PHONY: all up down
+.PHONY: all up down

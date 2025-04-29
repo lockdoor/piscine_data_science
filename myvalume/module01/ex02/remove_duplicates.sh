@@ -131,11 +131,32 @@ id SERIAL PRIMARY KEY);"
 # $PSQL "ALTER TABLE customers_new ADD CONSTRAINT unique_product_user_session UNIQUE (product_id, user_id, user_session);"
 
 # INSERT NOT DUPLICATE RECORDS
-$PSQL "INSERT INTO customers_new (event_time, event_type, product_id, price, user_id, user_session) \
-SELECT DISTINCT ON (product_id, user_id, user_session, event_type) event_time, event_type, product_id, price, user_id, user_session FROM customers;"
+# $PSQL "INSERT INTO customers_new (event_time, event_type, product_id, price, user_id, user_session) \
+# SELECT DISTINCT ON (product_id, user_id, user_session, event_type) event_time, event_type, product_id, price, user_id, user_session FROM customers;"
+
+$PSQL "WITH cte AS (
+  SELECT
+    *,
+    LAG(event_time) OVER (
+      PARTITION BY product_id, event_type
+      ORDER BY event_time
+    ) AS prev_event_time
+  FROM customers
+),
+filtered AS (
+  SELECT *
+  FROM cte
+  WHERE
+    prev_event_time IS NULL  -- no previous = keep
+    OR EXTRACT(EPOCH FROM (event_time - prev_event_time)) > 1 -- difference > 1 second = keep
+)
+INSERT INTO customers_new (event_time, event_type, product_id, price, user_id, user_session) \
+SELECT event_time, event_type, product_id, price, user_id, user_session \
+FROM filtered;"
+
 
 # DROP TABLE customers;
-$PSQL "DROP TABLE IF EXISTS customers;"
+# $PSQL "DROP TABLE IF EXISTS customers;"
 
 # RENAME TABLE customers_new TO customers;"
-$PSQL "ALTER TABLE customers_new RENAME TO customers;"
+# $PSQL "ALTER TABLE customers_new RENAME TO customers;"
