@@ -5,6 +5,7 @@ services:
     hostname: postgres
     volumes:
       - ./myvalume:/myvalume
+      - db-postgres:/var/lib/postgresql/data
     secrets:
       - postgres_pwd
     env_file:
@@ -48,3 +49,7 @@ secrets:
     file: ./secrets/pgadmin_pwd.txt
   jupyter_token:
     file: ./secrets/jupyter_token.txt
+
+volumes:
+  db-postgres:
+   name: db-postgres
