@@ -4,7 +4,7 @@ services:
     container_name: postgres
     hostname: postgres
     volumes:
-      - ./myvalume:/myvalume
+      - ./myvolume:/myvolume
       - db-postgres:/var/lib/postgresql/data
     secrets:
       - postgres_pwd
@@ -23,6 +23,8 @@ services:
     env_file:
       - .env
     restart: always
+    depends_on:
+      - postgres
     ports:
       - "8000:80"
 
@@ -30,10 +32,14 @@ services:
     build:
       context: ./jupyter
       dockerfile: Dockerfile
+    image: jupyter
+    restart: always
+    depends_on:
+      - postgres
     container_name: jupyter
     hostname: jupyter
     volumes:
-      - ./myvalume:/myvalume
+      - ./myvolume:/myvolume
     secrets:
       - jupyter_token
       - postgres_pwd
