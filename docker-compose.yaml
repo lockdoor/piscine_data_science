@@ -34,8 +34,8 @@ services:
       dockerfile: Dockerfile
     image: jupyter
     restart: always
-    depends_on:
-      - postgres
+    # depends_on:
+    #   - postgres
     container_name: jupyter
     hostname: jupyter
     volumes:
