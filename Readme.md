@@ -1,3 +1,7 @@
+# Cradit
+- [Statistic](https://www.youtube.com/@ThanutWongsaichue)
+- [Machine Learning](https://www.youtube.com/playlist?list=PLoTScYm9O0GH_3VrwwnQafwWQ6ibKnEtU)
+
 psql -U pnamnil -d piscineds -h localhost -W
 
 on localhost password not reqired
